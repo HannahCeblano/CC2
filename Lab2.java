@@ -1,5 +1,5 @@
 //Hannah Marielle O. Ceblano
-//CICTS 1N-A
+//CITCS 1N-A
 //September 7, 2024
 //Laboratory Challenge No.2
 
