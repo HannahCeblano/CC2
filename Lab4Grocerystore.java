@@ -1,5 +1,5 @@
 //Hannah Marielle O. Ceblano 
-//Cicts 1N-A
+//CITCS 1N-A
 //September 12, 2024
 //Laboratory 4
 
