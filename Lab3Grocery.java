@@ -1,7 +1,7 @@
 //Hannah Marielle O. Ceblano 
 //Cicts 1N-A
-//September 12, 2024
-//Laboratory 3
+//September 7, 2024
+//Laboratory No.3
 
 
 import java.util.Scanner;
