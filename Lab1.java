@@ -1,8 +1,8 @@
-// First Programming Activity
-// Hannah Marielle O. Ceblano
-// CITCS 1N-A
-// September 3, 2024
-// Laboratory No.1
+//First Programming Activity
+//Hannah Marielle O. Ceblano
+//CITCS 1N-A
+//September 3, 2024
+//Laboratory No.1
 
 public class Lab1 {
 	public static void main(String[] args) {
