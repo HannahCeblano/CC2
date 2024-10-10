@@ -37,10 +37,10 @@ public class Lab3Grocery {
 		finaltotal = (subtotal -  discount) + salestax;
 
 		//Prints the sub total,discount,salestax, and finaltotal
-		System.out.printf("\nSubtotal: "+subtotal);
-		System.out.printf("\nDiscount: "+discount);
-		System.out.printf("\nSales Tax: "+salestax);
-		System.out.printf("\nTotal: "+finaltotal);
+		System.out.printf("\nSubtotal: "+ subtotal);
+		System.out.printf("\nDiscount: "+ discount);
+		System.out.printf("\nSales Tax: "+ salestax);
+		System.out.printf("\nTotal: "+ finaltotal);
 
 	}
 }
