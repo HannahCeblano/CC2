@@ -31,7 +31,7 @@ public class FinalLab2 {
             // Print the results for each city
             System.out.println("City " + (city + 1) + ":");
             System.out.println("Average Temperature: " + String.format("%.2f", average) + "°C");
-            System.out.println("Highest Temperature: " + highest + "°C");
+            System.out.println("Highest Temperature: " + highest + "°C\n");
         }
     }
 }
