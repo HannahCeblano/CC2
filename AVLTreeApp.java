@@ -1,4 +1,4 @@
-import java.util.Scanner;
+import java.util.Scanner; // Add this import statement
 
 class AVLNode {
     int key;
@@ -99,22 +99,33 @@ public class AVLTreeApp {
         Scanner scanner = new Scanner(System.in);
         AVLTree avlTree = new AVLTree();
 
+        // Ask the user how many values they will insert
         System.out.print("Enter 'insert' or 'end': ");
         String command = scanner.next();
 
-        while (command.equalsIgnoreCase("insert")) {
-            System.out.print("Enter integer value or end: ");
-            if (scanner.hasNextInt()) {
-                int value = scanner.nextInt();
-                avlTree.insert(value);
-            } else {
-                break;
+        if (command.equalsIgnoreCase("insert")) {
+            System.out.print("How many values would you like to insert: ");
+            int numberOfValues = scanner.nextInt();
+            
+            for (int i = 0; i < numberOfValues; i++) {
+                System.out.print("Enter integer value or 'end' to stop: ");
+                if (scanner.hasNextInt()) {
+                    int value = scanner.nextInt();
+                    avlTree.insert(value);
+                } else {
+                    String input = scanner.next();
+                    if (input.equalsIgnoreCase("end")) {
+                        break;
+                    } else {
+                        System.out.println("Invalid input. Please enter a valid integer.");
+                    }
+                }
             }
         }
-        
-        System.out.println("Preorder Traversal:");
+
+        // Print the tree's preorder traversal
+        System.out.println("Preorder Traversal of the AVL Tree:");
         avlTree.printPreorder();
         scanner.close();
     }
 }
-
