@@ -1,0 +1,117 @@
+import java.util.*;
+
+class Graph {
+    private int vertices;
+    private LinkedList<Integer>[] adjList;  // Adjacency List to store graph
+
+    // Constructor to initialize graph
+    public Graph(int vertices) {
+        this.vertices = vertices;
+        adjList = new LinkedList[vertices];
+        for (int i = 0; i < vertices; i++) {
+            adjList[i] = new LinkedList<>();
+        }
+    }
+
+    // Method to add an edge to the graph
+    public void addEdge(int v, int w) {
+        adjList[v].add(w);  // Add w to v's list
+        adjList[w].add(v);  // Because the graph is undirected
+    }
+
+    // Method to perform BFS traversal
+    public void BFS(int start) {
+        boolean[] visited = new boolean[vertices];
+        Queue<Integer> queue = new LinkedList<>();
+        
+        visited[start] = true;
+        queue.add(start);
+        
+        System.out.println("BFS Traversal starting from vertex " + start + ":");
+        
+        while (!queue.isEmpty()) {
+            int currentVertex = queue.poll();
+            System.out.print(currentVertex + " ");
+            
+           
+            for (Integer neighbor : adjList[currentVertex]) {
+                if (!visited[neighbor]) {
+                    visited[neighbor] = true;
+                    queue.add(neighbor);
+                }
+            }
+        }
+        System.out.println();
+    }
+
+    
+    public void DFS(int start) {
+        boolean[] visited = new boolean[vertices];
+        Stack<Integer> stack = new Stack<>();
+        
+        stack.push(start);
+        
+        System.out.println("DFS Traversal starting from vertex " + start + ":");
+        
+        while (!stack.isEmpty()) {
+            int currentVertex = stack.pop();
+            
+            if (!visited[currentVertex]) {
+                visited[currentVertex] = true;
+                System.out.print(currentVertex + " ");
+            }
+            
+            
+            for (Integer neighbor : adjList[currentVertex]) {
+                if (!visited[neighbor]) {
+                    stack.push(neighbor);
+                }
+            }
+        }
+        System.out.println();
+    }
+}
+
+public class GraphTraversal {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        
+        
+        System.out.print("Enter the number of nodes (vertices): ");
+        int vertices = scanner.nextInt();
+        
+        
+        Graph graph = new Graph(vertices);
+        
+        
+        System.out.print("Enter the number of edges: ");
+        int edges = scanner.nextInt();
+        
+        
+        System.out.println("Enter each edges as apir of nodes: ");
+        for (int i = 0; i < edges; i++) {
+            int start = scanner.nextInt();
+            int end = scanner.nextInt();
+            graph.addEdge(start, end);
+        }
+        
+       
+        System.out.print("Choose (1 for BFS, 2 for DFS): ");
+        int choice = scanner.nextInt();
+        
+  
+        System.out.print("Enter the starting node : ");
+        int startVertex = scanner.nextInt();
+        
+        
+        if (choice == 1) {
+            graph.BFS(startVertex);
+        } else if (choice == 2) {
+            graph.DFS(startVertex);
+        } else {
+            System.out.println("Invalid choice! Please choose 1 for BFS or 2 for DFS.");
+        }
+        
+        scanner.close();
+    }
+}
