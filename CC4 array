@@ -1,0 +1,83 @@
+import java.util.Scanner;
+
+public class ArrayAddressCalculation {
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter number of dimensions: ");
+        int dims = sc.nextInt();
+
+        int[] lower = new int[dims];
+        int[] upper = new int[dims];
+        int[] index = new int[dims];
+
+        for (int i = 0; i < dims; i++) {
+            System.out.print("Enter lower bound of dimension " + (i + 1) + ": ");
+            lower[i] = sc.nextInt();
+
+            System.out.print("Enter upper bound of dimension " + (i + 1) + ": ");
+            upper[i] = sc.nextInt();
+        }
+
+        System.out.print("Enter Base Address (alpha): ");
+        int base = sc.nextInt();
+
+        System.out.print("Enter Element Size (esize in bytes): ");
+        int esize = sc.nextInt();
+
+        System.out.println("\nEnter indices for the element:");
+        for (int i = 0; i < dims; i++) {
+            System.out.print("Index " + (i + 1) + ": ");
+            index[i] = sc.nextInt();
+        }
+
+        /* ---- Compute total number of elements ---- */
+        int totalElements = 1;
+        for (int i = 0; i < dims; i++) {
+            totalElements *= (upper[i] - lower[i] + 1);
+        }
+
+        /* ---- Address calculation (Row-Major Order) ---- */
+        int offset = 0;
+        int multiplier = 1;
+
+        for (int i = dims - 1; i >= 0; i--) {
+            offset += (index[i] - lower[i]) * multiplier;
+            multiplier *= (upper[i] - lower[i] + 1);
+        }
+
+        int address = base + (offset * esize);
+
+        /* ---- OUTPUT (LAB STYLE) ---- */
+        System.out.println("\n=== CALCULATION RESULTS ===\n");
+
+        System.out.println("Array Configuration:");
+        System.out.println(" Dimensions: " + dims);
+        System.out.println(" Base Address (alpha): " + base);
+        System.out.println(" Element Size (esize): " + esize + " bytes");
+
+        System.out.print(" Bounds: ");
+        for (int i = 0; i < dims; i++) {
+            System.out.print("[" + lower[i] + " .. " + upper[i] + "] ");
+        }
+        System.out.println("\n");
+
+        System.out.print("Element: A[");
+        for (int i = 0; i < dims; i++) {
+            System.out.print(index[i]);
+            if (i < dims - 1) System.out.print(", ");
+        }
+        System.out.println("]\n");
+
+        System.out.println("Formula Used:");
+        System.out.println(" LOC(A) = alpha + { Σ (index − lower bound) × product of succeeding dimensions } × esize\n");
+
+        System.out.println("Total Number of Elements: " + totalElements);
+        System.out.println("Calculated Address: " + address);
+        System.out.println("Address in Hexadecimal: 0x" + Integer.toHexString(address).toUpperCase());
+
+        System.out.println("\n=== Code Execution Successful ===");
+    }
+}
+
