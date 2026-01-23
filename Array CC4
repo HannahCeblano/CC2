@@ -1,0 +1,76 @@
+import java.util.Scanner;
+
+public class ArrayAddressCalculator {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // 1. Gather Basic Configuration
+        System.out.print("Enter number of dimensions: ");
+        int n = scanner.nextInt();
+
+        int[] dims = new int[n];
+        for (int i = 0; i < n; i++) {
+            System.out.print("Size of Dimension " + (i + 1) + ": ");
+            dims[i] = scanner.nextInt();
+        }
+
+        System.out.print("Enter Base Address (alpha): ");
+        long alpha = scanner.nextLong();
+
+        System.out.print("Enter Element Size (esize) in bytes: ");
+        int esize = scanner.nextInt();
+
+        // 2. Gather Target Indices
+        int[] indices = new int[n];
+        System.out.println("\nEnter indices for the element:");
+        for (int i = 0; i < n; i++) {
+            System.out.print("Index " + (i + 1) + ": ");
+            indices[i] = scanner.nextInt();
+        }
+
+        // 3. Perform Calculations
+        long totalElements = 1;
+        for (int d : dims) totalElements *= d;
+
+        // Calculate Offset (Row-Major)
+        long offset = 0;
+        StringBuilder formulaPart = new StringBuilder();
+        
+        for (int i = 0; i < n; i++) {
+            long multiplier = 1;
+            for (int j = i + 1; j < n; j++) {
+                multiplier *= dims[j];
+            }
+            offset += (long) indices[i] * multiplier;
+            
+            // Build formula string for display
+            formulaPart.append("(Index_").append(i + 1).append(" * ").append(multiplier).append(")");
+            if (i < n - 1) formulaPart.append(" + ");
+        }
+
+        long finalAddress = alpha + (offset * esize);
+
+        // 4. Display Formatted Output
+        System.out.println("\n=== CALCULATION RESULTS ===");
+        System.out.println("Array Configuration:");
+        System.out.println("   Dimensions: " + n);
+        System.out.println("   Base Address (alpha): " + alpha);
+        System.out.println("   Element Size (esize): " + esize + " bytes");
+        System.out.println("   Total Elements: " + totalElements);
+
+        System.out.print("Element: A[");
+        for (int i = 0; i < n; i++) {
+            System.out.print(indices[i] + (i == n - 1 ? "" : "]["));
+        }
+        System.out.println("]");
+
+        System.out.println("\nFormula Used:");
+        System.out.println("   Address = alpha + [" + formulaPart + "] * esize");
+
+        System.out.println("\nCalculated Address: " + finalAddress);
+        System.out.println("Address in Hexadecimal: 0x" + Long.toHexString(finalAddress).toUpperCase());
+        System.out.println("\n=== Code Execution Successful ===");
+        
+        scanner.close();
+    }
+}
