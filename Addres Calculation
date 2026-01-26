@@ -1,0 +1,52 @@
+import java.util.Scanner;
+
+public class ArrayAddressCalculation {
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter number of dimensions: ");
+        int n = sc.nextInt();
+
+        int[] size = new int[n];
+        int[] index = new int[n];
+
+        System.out.print("Enter base address (Alpha): ");
+        int base = sc.nextInt();
+
+        System.out.print("Enter element size (bytes): ");
+        int elementSize = sc.nextInt();
+
+        for (int i = 0; i < n; i++) {
+            System.out.print("Enter size of dimension " + (i + 1) + ": ");
+            size[i] = sc.nextInt();
+        }
+
+        for (int i = 0; i < n; i++) {
+            System.out.print("Enter index for dimension " + (i + 1) + ": ");
+            index[i] = sc.nextInt();
+        }
+
+        // Total number of elements
+        int totalElements = 1;
+        for (int s : size) {
+            totalElements *= s;
+        }
+
+        // Address calculation
+        int offset = 0;
+        for (int i = 0; i < n; i++) {
+            int product = 1;
+            for (int j = i + 1; j < n; j++) {
+                product *= size[j];
+            }
+            offset += index[i] * product;
+        }
+
+        int address = base + (offset * elementSize);
+
+        System.out.println("\n--- RESULTS ---");
+        System.out.println("Total number of elements: " + totalElements);
+        System.out.println("Computed Array Address: " + address);
+    }
+}
