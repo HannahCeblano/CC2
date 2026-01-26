@@ -1,44 +1,87 @@
 import java.util.Scanner;
 
-public class RecordAddressCalculator {
+public class RecordAddressCalc {
+    static class Field {
+        String name, type;
+        int dimCount, totalElements, elementSize, fieldSize, startAddress;
+        int[] dims;
+    }
+
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-
-        System.out.print("Enter total number of Records in the array: ");
-        int numRecords = sc.nextInt();
-
-        System.out.print("Enter number of Fields per record: ");
+        System.out.println("=== Record Address Calculation ===");
+        
+        System.out.print("\nEnter base address of the record: ");
+        int baseAddr = sc.nextInt();
+        System.out.print("Enter number of fields in the record: ");
         int numFields = sc.nextInt();
 
-        int[] fieldSizes = new int[numFields];
-        int recordSize = 0;
+        System.out.println("\nDefault sizes: char=1, int=2, float=4, double=8");
+        Field[] fields = new Field[numFields];
+        int currentAddr = baseAddr;
 
         for (int i = 0; i < numFields; i++) {
-            System.out.print("Enter size of Field " + (i + 1) + " (in bytes): ");
-            fieldSizes[i] = sc.nextInt();
-            recordSize += fieldSizes[i];
+            fields[i] = new Field();
+            System.out.println("\nEnter field information:");
+            System.out.print("Field " + (i + 1) + " name: ");
+            fields[i].name = sc.next();
+            System.out.print("Field " + (i + 1) + " type (char/int/float/double): ");
+            fields[i].type = sc.next();
+            
+            // Assign size based on type
+            fields[i].elementSize = switch (fields[i].type) {
+                case "char" -> 1; case "int" -> 2;
+                case "float" -> 4; case "double" -> 8;
+                default -> 1;
+            };
+
+            System.out.print("Number of dimensions (1 for single variable): ");
+            fields[i].dimCount = sc.nextInt();
+            fields[i].dims = new int[fields[i].dimCount];
+            fields[i].totalElements = 1;
+            for (int j = 0; j < fields[i].dimCount; j++) {
+                System.out.print("Size of dimension " + (j + 1) + ": ");
+                fields[i].dims[j] = sc.nextInt();
+                fields[i].totalElements *= fields[i].dims[j];
+            }
+            fields[i].fieldSize = fields[i].totalElements * fields[i].elementSize;
+            fields[i].startAddress = currentAddr;
+            currentAddr += fields[i].fieldSize;
         }
 
-        System.out.print("\nEnter Base Address of the Record Array: ");
-        int baseAddress = sc.nextInt();
-
-        System.out.print("Enter the Record Index to search (0 to " + (numRecords - 1) + "): ");
-        int targetRecord = sc.nextInt();
-
-        System.out.print("Enter the Field Index to locate (1 to " + numFields + "): ");
-        int targetField = sc.nextInt();
-
-        // Formula: Base + (RecordIndex * TotalRecordSize) + Sum(Sizes of preceding fields)
-        int fieldOffset = 0;
-        for (int i = 0; i < targetField - 1; i++) {
-            fieldOffset += fieldSizes[i];
+        // Display Record Structure
+        System.out.println("\n=== RECORD STRUCTURE ===");
+        System.out.println("Record Base Address: " + baseAddr);
+        System.out.println("Total Record Size: " + (currentAddr - baseAddr) + " bytes");
+        System.out.println("\nField Details:\n---------------------------------------------------------");
+        System.out.printf("%-15s %-15s %-10s %-10s\n", "Field Name", "Type", "Size", "Address");
+        for (Field f : fields) {
+            String typeStr = f.type + (f.dimCount > 0 ? "[" + f.dims[0] + "]" : "");
+            System.out.printf("%-15s %-15s %-10d %-10d\n", f.name, typeStr, f.fieldSize, f.startAddress);
         }
+        System.out.println("---------------------------------------------------------");
 
-        int finalAddress = baseAddress + (targetRecord * recordSize) + fieldOffset;
+        System.out.print("\nDo you want to calculate a specific element address? (y/n): ");
+        if (sc.next().equalsIgnoreCase("y")) {
+            System.out.print("Enter field number (1-" + numFields + "): ");
+            int fIdx = sc.nextInt() - 1;
+            Field target = fields[fIdx];
 
-        System.out.println("\n--- Results ---");
-        System.out.println("Size of one Record: " + recordSize + " bytes");
-        System.out.println("Total Elements (Records): " + numRecords);
-        System.out.println("Address of Record " + targetRecord + ", Field " + targetField + ": " + finalAddress);
+            System.out.println("\nEnter indices for the element (starting from 0):");
+            int offset = 0;
+            for (int i = 0; i < target.dimCount; i++) {
+                System.out.print("Index " + i + " (i): ");
+                int indexValue = sc.nextInt();
+                int multiplier = 1;
+                for (int j = i + 1; j < target.dimCount; j++) multiplier *= target.dims[j];
+                offset += indexValue * multiplier;
+            }
+
+            int finalAddr = target.startAddress + (offset * target.elementSize);
+            System.out.println("\n=== ELEMENT ADDRESS CALCULATION ===");
+            System.out.println("Field: " + target.name + " (" + target.type + "[" + target.totalElements + "])");
+            System.out.println("Total Elements in Field: " + target.totalElements);
+            System.out.println("Calculated Address: " + finalAddr);
+        }
     }
 }
