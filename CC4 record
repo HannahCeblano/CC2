@@ -1,42 +1,44 @@
 import java.util.Scanner;
 
 public class RecordAddressCalculator {
-
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
-        System.out.println("=== Record Address Calculation (Individual Elements) ===");
+        System.out.print("Enter total number of Records in the array: ");
+        int numRecords = sc.nextInt();
 
-        // Accept user input
-        System.out.print("Enter the base address (B) of the array/record: ");
-        int baseAddress = sc.nextInt();
+        System.out.print("Enter number of Fields per record: ");
+        int numFields = sc.nextInt();
 
-        System.out.print("Enter the size (S) of each element in bytes: ");
-        int elementSize = sc.nextInt();
+        int[] fieldSizes = new int[numFields];
+        int recordSize = 0;
 
-        System.out.print("Enter the total number of elements (N): ");
-        int numElements = sc.nextInt();
-
-        // Display total number of elements
-        System.out.println("Total number of elements: " + numElements);
-
-        // Ask user which element's address to calculate
-        System.out.print("Enter the index (i) of the element to calculate its address (0 to " + (numElements - 1) + "): ");
-        int elementIndex = sc.nextInt();
-
-        // Validate index
-        if (elementIndex < 0 || elementIndex >= numElements) {
-            System.out.println("Error: Index out of bounds!");
-            sc.close();
-            return;
+        for (int i = 0; i < numFields; i++) {
+            System.out.print("Enter size of Field " + (i + 1) + " (in bytes): ");
+            fieldSizes[i] = sc.nextInt();
+            recordSize += fieldSizes[i];
         }
 
-        // Dynamically derive the formula: Address = Base + (Index * Size)
-        int address = baseAddress + (elementIndex * elementSize);
+        System.out.print("\nEnter Base Address of the Record Array: ");
+        int baseAddress = sc.nextInt();
 
-        // Display the computed address
-        System.out.println("The address of element at index " + elementIndex + " is: " + address);
+        System.out.print("Enter the Record Index to search (0 to " + (numRecords - 1) + "): ");
+        int targetRecord = sc.nextInt();
 
-        sc.close();
+        System.out.print("Enter the Field Index to locate (1 to " + numFields + "): ");
+        int targetField = sc.nextInt();
+
+        // Formula: Base + (RecordIndex * TotalRecordSize) + Sum(Sizes of preceding fields)
+        int fieldOffset = 0;
+        for (int i = 0; i < targetField - 1; i++) {
+            fieldOffset += fieldSizes[i];
+        }
+
+        int finalAddress = baseAddress + (targetRecord * recordSize) + fieldOffset;
+
+        System.out.println("\n--- Results ---");
+        System.out.println("Size of one Record: " + recordSize + " bytes");
+        System.out.println("Total Elements (Records): " + numRecords);
+        System.out.println("Address of Record " + targetRecord + ", Field " + targetField + ": " + finalAddress);
     }
 }
