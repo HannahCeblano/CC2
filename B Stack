@@ -1,0 +1,49 @@
+import java.util.Scanner;
+import java.util.Stack;
+
+public class StackSimulation {
+    public static void main(String[] args) {
+
+        Stack<Integer> stack = new Stack<>();
+        Scanner sc = new Scanner(System.in);
+        int choice;
+
+        do {
+            System.out.println("\nSTACK OPERATIONS");
+            System.out.println("1. PUSH");
+            System.out.println("2. POP");
+            System.out.println("3. EXIT");
+            System.out.print("Enter your choice: ");
+            choice = sc.nextInt();
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter value to PUSH: ");
+                    int value = sc.nextInt();
+                    stack.push(value);
+                    System.out.println("Stack after PUSH: " + stack);
+                    break;
+
+                case 2:
+                    if (stack.isEmpty()) {
+                        System.out.println("Stack is EMPTY. Cannot POP.");
+                    } else {
+                        int removed = stack.pop();
+                        System.out.println("Popped element: " + removed);
+                        System.out.println("Stack after POP: " + stack);
+                    }
+                    break;
+
+                case 3:
+                    System.out.println("Exiting Stack Program...");
+                    break;
+
+                default:
+                    System.out.println("Invalid choice!");
+            }
+
+        } while (choice != 3);
+
+        sc.close();
+    }
+}
