@@ -1,0 +1,50 @@
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Scanner;
+
+public class QueueSimulation {
+    public static void main(String[] args) {
+
+        Queue<Integer> queue = new LinkedList<>();
+        Scanner sc = new Scanner(System.in);
+        int choice;
+
+        do {
+            System.out.println("\nQUEUE OPERATIONS");
+            System.out.println("1. ENQUEUE");
+            System.out.println("2. DEQUEUE");
+            System.out.println("3. EXIT");
+            System.out.print("Enter your choice: ");
+            choice = sc.nextInt();
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter value to ENQUEUE: ");
+                    int value = sc.nextInt();
+                    queue.add(value);
+                    System.out.println("Queue after ENQUEUE: " + queue);
+                    break;
+
+                case 2:
+                    if (queue.isEmpty()) {
+                        System.out.println("Queue is EMPTY. Cannot DEQUEUE.");
+                    } else {
+                        int removed = queue.remove();
+                        System.out.println("Dequeued element: " + removed);
+                        System.out.println("Queue after DEQUEUE: " + queue);
+                    }
+                    break;
+
+                case 3:
+                    System.out.println("Exiting Queue Program...");
+                    break;
+
+                default:
+                    System.out.println("Invalid choice!");
+            }
+
+        } while (choice != 3);
+
+        sc.close();
+    }
+}
