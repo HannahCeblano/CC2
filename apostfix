@@ -1,0 +1,109 @@
+import java.util.*;
+
+public class InfixToPostfix{
+
+    // Precedence levels matching standard math rules + modulo
+    static int getPrecedence(char ch) {
+        switch (ch) {
+            case '+': case '-': return 1;
+            case '*': case '/': case '%': return 2;
+            case '^': return 3;
+        }
+        return -1;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String choice;
+
+        do {
+            System.out.println("============================================================================");
+            System.out.println("INFIX TO POSTFIX CONVERTER USING STACK OPERATIONS");
+            System.out.println("============================================================================");
+            
+            System.out.print("\nEnter an infix expression: ");
+            String input = sc.nextLine().trim();
+            
+            // Ensure input ends with # as per your sample image
+            if (!input.endsWith("#")) {
+                input += "#";
+            }
+            
+            // Print Table Header
+            System.out.println("+-----------------------+------------------------------+-----------------------------------+");
+            System.out.printf("| %-21s | %-21s | %-24s |\n", "TOKEN (X)", "STACK (Y)", "OUTPUT (POSTFIX)");
+            System.out.println("+-----------------------+------------------------------+-----------------------------------+");
+
+            runSimulation(input);
+
+            System.out.println("============================================================================");
+            System.out.print("\nDo you want to try another expression? (yes/no): ");
+            choice = sc.next();
+            sc.nextLine(); // consume leftover newline
+        } while (choice.equalsIgnoreCase("yes"));
+    }
+
+    static void runSimulation(String infix) {
+        StringBuilder postfix = new StringBuilder();
+        Stack<Character> stack = new Stack<>();
+        stack.push('#'); // Initial stack state
+
+        // Process characters up until the '#' terminator
+        for (int i = 0; i < infix.length(); i++) {
+            char c = infix.charAt(i);
+
+            // Skip spaces but keep logic intact
+            if (c == ' ') continue;
+
+            if (Character.isLetterOrDigit(c)) {
+                postfix.append(c).append(" ");
+                printRow(String.valueOf(c), stack, postfix);
+            } 
+            else if (c == '(') {
+                stack.push(c);
+                printRow(String.valueOf(c), stack, postfix);
+            } 
+            else if (c == ')') {
+                while (!stack.isEmpty() && stack.peek() != '(') {
+                    postfix.append(stack.pop()).append(" ");
+                }
+                stack.pop(); // Remove '('
+                printRow(String.valueOf(c), stack, postfix);
+            } 
+            else if (c == '#') {
+                // Terminator reached: Pop everything except the base #
+                while (stack.size() > 1) {
+                    char popped = stack.pop();
+                    postfix.append(popped).append(" ");
+                    printRow("# (nothing follows)", stack, postfix);
+                }
+            } 
+            else {
+                // Handle Operators
+                while (stack.peek() != '#' && getPrecedence(c) <= getPrecedence(stack.peek())) {
+                    postfix.append(stack.pop()).append(" ");
+                }
+                stack.push(c);
+                printRow(String.valueOf(c), stack, postfix);
+            }
+        }
+
+        System.out.println("+-----------------------+-----------------------+--------------------------+");
+        System.out.println("\nFINAL RESULT:");
+        System.out.println("Infix Expression: " + infix);
+        System.out.println("Postfix Expression: " + postfix.toString().trim());
+    }
+
+    static void printRow(String token, Stack<Character> stack, StringBuilder postfix) {
+        // Convert stack to space-separated string: # + (
+        StringBuilder stackContent = new StringBuilder();
+        for (Object obj : stack.toArray()) {
+            stackContent.append(obj).append(" ");
+        }
+        
+        System.out.printf("| %-21s | %-21s | %-24s |\n", 
+                          token, 
+                          stackContent.toString().trim(), 
+                          postfix.toString().trim());
+    }
+}
